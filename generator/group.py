@@ -1,0 +1,45 @@
+from Model.group import Group
+import random
+import string
+import os.path
+import getopt
+import sys
+
+
+import clr
+clr.AddReferenceByName('')
+
+
+try:
+    opts,args = getopt.getopt(sys.argv[1:],"n:f:",["number of groups", "file"])
+except getopt.GetoptError as err:
+    sys.exit(2)
+
+
+n = 3
+f = "data/groups.xlsx"
+
+for o, a in opts:
+    if o=="-n":
+        n=int(a)
+    elif o=="-f":
+        f = a
+
+def random_string(prefix,maxlen,symbols=None,digits=None):
+    if symbols != None:
+        symbols = string.ascii_letters + " "*3
+        return prefix + "".join([random.choice(symbols) for i in range(random.randrange(maxlen))])
+    elif digits !=None:
+        digits = string.digits + "-"*3
+        return prefix + "".join([random.choice(digits) for i in range(random.randrange(maxlen))])
+    else:
+        all = string.ascii_letters + string.digits +  string.punctuation + " "*10
+        return prefix + "".join([random.choice(all) for i in range(random.randrange(maxlen))])
+
+
+testdata = [Group(name=random_string('name',3,symbols=1))
+            for i in range(n)]
+
+file = os.path.join(os.path.dirname(os.path.abspath(__file__)),"..",f)
+
+
